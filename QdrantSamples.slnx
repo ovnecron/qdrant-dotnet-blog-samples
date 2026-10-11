@@ -1,0 +1,26 @@
+<Solution>
+  <Folder Name="/01-first-collection/azure-openai/">
+    <Project Path="samples/01-first-collection/azure-openai/Sample.csproj" />
+  </Folder>
+  <Folder Name="/01-first-collection/ollama/">
+    <Project Path="samples/01-first-collection/ollama/Sample.csproj" />
+  </Folder>
+  <Folder Name="/02-indexing-documents/azure-openai/">
+    <Project Path="samples/02-indexing-documents/azure-openai/Sample.csproj" />
+  </Folder>
+  <Folder Name="/02-indexing-documents/ollama/">
+    <Project Path="samples/02-indexing-documents/ollama/Sample.csproj" />
+  </Folder>
+  <Folder Name="/03-querying/azure-openai/">
+    <Project Path="samples/03-querying/azure-openai/Sample.csproj" />
+  </Folder>
+  <Folder Name="/03-querying/ollama/">
+    <Project Path="samples/03-querying/ollama/Sample.csproj" />
+  </Folder>
+  <Folder Name="/04-chunking/azure-openai/">
+    <Project Path="samples/04-chunking/azure-openai/Sample.csproj" />
+  </Folder>
+  <Folder Name="/04-chunking/ollama/">
+    <Project Path="samples/04-chunking/ollama/Sample.csproj" />
+  </Folder>
+</Solution>

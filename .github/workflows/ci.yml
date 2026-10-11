@@ -1,0 +1,18 @@
+name: Build samples
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Restore dependencies
+        run: dotnet restore QdrantSamples.slnx --locked-mode
+      - name: Build samples
+        run: dotnet build QdrantSamples.slnx --no-restore --configuration Release
