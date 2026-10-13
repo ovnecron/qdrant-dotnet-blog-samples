@@ -6,7 +6,7 @@ Runnable .NET samples for my Qdrant articles, with Azure OpenAI and local Ollama
 
 - .NET SDK **10.0.102**, selected by `global.json` with roll-forward disabled.
 - Docker with Compose for local Qdrant **1.19.0** (HTTP 6333, gRPC 6334).
-- Azure OpenAI configuration or Ollama **0.11.10+** with `embeddinggemma:300m` for samples 02–04 in index/query mode.
+- Azure OpenAI configuration or Ollama **0.11.10+** with `embeddinggemma:300m` for indexing and querying. Sample 01 and offline previews do not need an embedding provider.
 
 Every project targets .NET 10 and pins Qdrant.Client 1.19.0. Azure embedding programs pin Microsoft.Extensions.AI.OpenAI 10.9.0 and Azure.AI.OpenAI 2.1.0. Ollama embedding programs pin Microsoft.Extensions.AI 10.9.0 and OllamaSharp 5.4.30. Sample 01 references only Qdrant.Client, regardless of provider folder.
 
@@ -64,6 +64,7 @@ The `support-embeddinggemma-v1` contract is EmbeddingGemma 300m, full 768-dimens
 | 02 | [Index and read back documents](samples/02-indexing-documents/README.md) | [Article](https://www.lukaswalter.dev/posts/indexing-your-first-documents/) |
 | 03 | [Query with a document allowlist](samples/03-querying/README.md) | [Article](https://www.lukaswalter.dev/posts/querying-qdrant-from-dotnet/) |
 | 04 | [Chunk along section boundaries](samples/04-chunking/README.md) | [Article](https://www.lukaswalter.dev/posts/chunking-before-it-becomes-a-quality-problem/) |
+| 05 | [Model payload and filter by metadata](samples/05-payload-modeling-and-metadata/README.md) | [Article](https://www.lukaswalter.dev/posts/payload-modeling-and-metadata-filters/) |
 
 Each sample is a standalone program: run it directly without running earlier samples or copying code between projects. Index/query programs create or validate their collection and seed their own data before demonstrating the article topic.
 
@@ -71,7 +72,7 @@ Each sample owns `blog-samples-NN-azure-openai-v1` and `blog-samples-NN-ollama-v
 
 Collection validation checks the unnamed dense-vector variant, size, distance and embedding-profile ID. It intentionally retains the articles' narrow contract checks. Stable IDs prevent duplicate sample points, but do not reconcile deleted input or make ingestion atomic.
 
-Sample 01 needs only Qdrant, even in the Azure folder. Sample 04 defaults to an offline chunk preview and needs neither Qdrant nor an embedding provider in that mode.
+Sample 01 needs only Qdrant, even in the Azure folder. Samples 04 and 05 default to offline previews of chunks and metadata. Neither needs Qdrant or an embedding provider in that mode.
 
 ## Restore, build and run
 
@@ -88,13 +89,17 @@ dotnet run --project samples/03-querying/azure-openai/Sample.csproj
 dotnet run --project samples/03-querying/ollama/Sample.csproj
 dotnet run --project samples/04-chunking/azure-openai/Sample.csproj
 dotnet run --project samples/04-chunking/ollama/Sample.csproj
+dotnet run --project samples/05-payload-modeling-and-metadata/azure-openai/Sample.csproj
+dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
 ```
 
-For the full index/query paths of sample 04:
+For the full index/query paths of samples 04 and 05:
 
 ```bash
 PREVIEW_ONLY=false dotnet run --project samples/04-chunking/azure-openai/Sample.csproj
 PREVIEW_ONLY=false dotnet run --project samples/04-chunking/ollama/Sample.csproj
+PREVIEW_ONLY=false dotnet run --project samples/05-payload-modeling-and-metadata/azure-openai/Sample.csproj
+PREVIEW_ONLY=false dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
 ```
 
 `QDRANT_HOST` defaults to `127.0.0.1` and `QDRANT_GRPC_PORT` to `6334`. The programs use local plaintext gRPC. Timeout bounds remain the article defaults: 10 seconds for sample 01, two minutes for index/query programs. Samples 02 and 03 make four or fewer embedding calls per run. The sample READMEs document the expected results.
