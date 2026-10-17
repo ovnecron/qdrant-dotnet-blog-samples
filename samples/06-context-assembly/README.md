@@ -8,16 +8,33 @@ Assemble eligible Qdrant results into a token-counted model request. Remove exac
 
 See the [root setup](../../README.md) for prerequisites and embedding-provider configuration. The default preview prints the seven source chunks and their metadata without contacting Qdrant or an embedding provider.
 
-```bash
+The following commands work in PowerShell and Bash/Zsh.
+
+```shell
 dotnet run --project samples/06-context-assembly/azure-openai/Sample.csproj
 dotnet run --project samples/06-context-assembly/ollama/Sample.csproj
 ```
 
 For retrieval and context assembly, start Qdrant with `docker compose up -d`, configure the chosen embedding provider, and run:
 
+**Bash/Zsh**
+
 ```bash
 PREVIEW_ONLY=false dotnet run --project samples/06-context-assembly/azure-openai/Sample.csproj
 PREVIEW_ONLY=false dotnet run --project samples/06-context-assembly/ollama/Sample.csproj
+```
+
+**PowerShell**
+
+```powershell
+$env:PREVIEW_ONLY = "false"
+try {
+    dotnet run --project samples/06-context-assembly/azure-openai/Sample.csproj
+    dotnet run --project samples/06-context-assembly/ollama/Sample.csproj
+}
+finally {
+    Remove-Item Env:PREVIEW_ONLY -ErrorAction SilentlyContinue
+}
 ```
 
 These commands stop after printing the assembled request. Answer generation is optional.
@@ -53,9 +70,24 @@ The sample estimates input text tokens with `o200k_base`. Select the tokenizer b
 
 ## Check the budget without services
 
+**Bash/Zsh**
+
 ```bash
 RUN_BUDGET_CHECKS=true dotnet run --project samples/06-context-assembly/azure-openai/Sample.csproj
 RUN_BUDGET_CHECKS=true dotnet run --project samples/06-context-assembly/ollama/Sample.csproj
+```
+
+**PowerShell**
+
+```powershell
+$env:RUN_BUDGET_CHECKS = "true"
+try {
+    dotnet run --project samples/06-context-assembly/azure-openai/Sample.csproj
+    dotnet run --project samples/06-context-assembly/ollama/Sample.csproj
+}
+finally {
+    Remove-Item Env:RUN_BUDGET_CHECKS -ErrorAction SilentlyContinue
+}
 ```
 
 Expect `Budget checks passed.` Both variants verify that a larger, higher-ranked candidate is rejected without suppressing a later candidate's paragraphs, that a request exactly at the measured allowance fits, and that the same request fails admission one token below that allowance. These checks need neither Qdrant nor Azure or Ollama configuration.
@@ -68,11 +100,29 @@ Configure `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_API_KEY` and `AZURE_OPENAI_CHAT
 
 Using Ollama or another provider for generation requires adapting the generation call and selecting the appropriate tokenizer.
 
+**Bash/Zsh**
+
 ```bash
 export AZURE_OPENAI_CHAT_DEPLOYMENT="your-chat-deployment"
 
 PREVIEW_ONLY=false GENERATE_ANSWER=true dotnet run --project samples/06-context-assembly/azure-openai/Sample.csproj
 PREVIEW_ONLY=false GENERATE_ANSWER=true dotnet run --project samples/06-context-assembly/ollama/Sample.csproj
+```
+
+**PowerShell**
+
+```powershell
+$env:AZURE_OPENAI_CHAT_DEPLOYMENT = "your-chat-deployment"
+
+$env:PREVIEW_ONLY = "false"
+$env:GENERATE_ANSWER = "true"
+try {
+    dotnet run --project samples/06-context-assembly/azure-openai/Sample.csproj
+    dotnet run --project samples/06-context-assembly/ollama/Sample.csproj
+}
+finally {
+    Remove-Item Env:PREVIEW_ONLY, Env:GENERATE_ANSWER -ErrorAction SilentlyContinue
+}
 ```
 
 The sample requests a JSON answer with `status`, `answer` and `sourceIds`. It accepts a consistent `insufficient` response or a nonempty `answered` response whose source IDs all refer to admitted evidence. Malformed JSON, incompatible field types, inconsistent status or unknown IDs fail validation. Known citation IDs do not prove that an answer's claims are supported.
@@ -91,8 +141,23 @@ Repeated runs against a collection containing only these fixtures keep seven poi
 
 To inspect an empty eligible result without relaxing the published-runbook conditions:
 
+**Bash/Zsh**
+
 ```bash
 PREVIEW_ONLY=false REQUIRED_DOCUMENT_ID=worker-shutdown-draft dotnet run --project samples/06-context-assembly/ollama/Sample.csproj
+```
+
+**PowerShell**
+
+```powershell
+$env:PREVIEW_ONLY = "false"
+$env:REQUIRED_DOCUMENT_ID = "worker-shutdown-draft"
+try {
+    dotnet run --project samples/06-context-assembly/ollama/Sample.csproj
+}
+finally {
+    Remove-Item Env:PREVIEW_ONLY, Env:REQUIRED_DOCUMENT_ID -ErrorAction SilentlyContinue
+}
 ```
 
 Expect `No evidence was admitted; skip generation.` Azure supports the same metadata variables. Setting `REQUIRED_PUBLICATION_STATE=draft` selects the draft runbook, and `REQUIRED_DOCUMENT_TYPE=note` selects the published note. Assembly only receives results that passed the required metadata checks.

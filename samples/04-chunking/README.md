@@ -8,16 +8,33 @@ Learn to chunk along section boundaries with a complete, independent console pro
 
 See the [root setup](../../README.md) for prerequisites and provider configuration. The default preview runs without Qdrant or an embedding provider.
 
-```bash
+The following commands work in PowerShell and Bash/Zsh.
+
+```shell
 dotnet run --project samples/04-chunking/azure-openai/Sample.csproj
 dotnet run --project samples/04-chunking/ollama/Sample.csproj
 ```
 
 Both commands default to preview mode. To index and query instead, start Qdrant with `docker compose up -d` and configure the selected embedding provider, then run:
 
+**Bash/Zsh**
+
 ```bash
 PREVIEW_ONLY=false dotnet run --project samples/04-chunking/azure-openai/Sample.csproj
 PREVIEW_ONLY=false dotnet run --project samples/04-chunking/ollama/Sample.csproj
+```
+
+**PowerShell**
+
+```powershell
+$env:PREVIEW_ONLY = "false"
+try {
+    dotnet run --project samples/04-chunking/azure-openai/Sample.csproj
+    dotnet run --project samples/04-chunking/ollama/Sample.csproj
+}
+finally {
+    Remove-Item Env:PREVIEW_ONLY -ErrorAction SilentlyContinue
+}
 ```
 
 ## Configuration

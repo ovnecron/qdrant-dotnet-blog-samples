@@ -8,7 +8,9 @@ Learn to create and validate a collection with a complete, independent console p
 
 Start Qdrant with `docker compose up -d`. See the [root setup](../../README.md) for prerequisites and provider configuration.
 
-```bash
+The following commands work in PowerShell and Bash/Zsh.
+
+```shell
 dotnet run --project samples/01-first-collection/azure-openai/Sample.csproj
 dotnet run --project samples/01-first-collection/ollama/Sample.csproj
 ```

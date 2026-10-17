@@ -6,18 +6,35 @@ Learn to model payload and filter by metadata with a complete, independent conso
 
 ## Run from the repository root
 
-Start Qdrant with `docker compose up -d`. See the [root setup](../../README.md) for prerequisites and provider configuration.
+See the [root setup](../../README.md) for prerequisites and provider configuration. The default preview runs without Qdrant or an embedding provider.
 
-```bash
+The following commands work in PowerShell and Bash/Zsh.
+
+```shell
 dotnet run --project samples/05-payload-modeling-and-metadata/azure-openai/Sample.csproj
 dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
 ```
 
-Both commands default to preview mode, so neither Qdrant nor an embedding provider is needed for preview. To index and query instead:
+Both commands default to preview mode. To index and query instead, start Qdrant with `docker compose up -d` and configure the selected embedding provider, then run:
+
+**Bash/Zsh**
 
 ```bash
 PREVIEW_ONLY=false dotnet run --project samples/05-payload-modeling-and-metadata/azure-openai/Sample.csproj
 PREVIEW_ONLY=false dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
+```
+
+**PowerShell**
+
+```powershell
+$env:PREVIEW_ONLY = "false"
+try {
+    dotnet run --project samples/05-payload-modeling-and-metadata/azure-openai/Sample.csproj
+    dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
+}
+finally {
+    Remove-Item Env:PREVIEW_ONLY -ErrorAction SilentlyContinue
+}
 ```
 
 ## Configuration
@@ -31,16 +48,49 @@ PREVIEW_ONLY=false dotnet run --project samples/05-payload-modeling-and-metadata
 
 `QDRANT_HOST` defaults to `127.0.0.1`, and `QDRANT_GRPC_PORT` defaults to `6334`.
 
-Azure requires `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_EMBEDDING_DEPLOYMENT` and `AZURE_OPENAI_API_KEY`. Use an Azure resource endpoint and a deployment of text-embedding-3-small with its default dimensions. Ollama uses `OLLAMA_ENDPOINT` (default `http://localhost:11434`) and requires `ollama pull embeddinggemma:300m`.
+For index/query mode, Azure requires `AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_EMBEDDING_DEPLOYMENT` and `AZURE_OPENAI_API_KEY`. Use an Azure resource endpoint and a deployment of text-embedding-3-small with its default dimensions. Ollama uses `OLLAMA_ENDPOINT` (default `http://localhost:11434`) and requires `ollama pull embeddinggemma:300m`.
 
 `PREVIEW_ONLY` defaults to `true`. Set it to `false` to index/query. It must be a boolean.
 
 The article's manual filter cases are available without editing code:
 
+**Bash/Zsh**
+
 ```bash
 PREVIEW_ONLY=false REQUIRED_PUBLICATION_STATE=draft dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
 PREVIEW_ONLY=false REQUIRED_DOCUMENT_TYPE=note dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
 PREVIEW_ONLY=false REQUIRED_DOCUMENT_ID=worker-shutdown-draft dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
+```
+
+**PowerShell**
+
+```powershell
+$env:PREVIEW_ONLY = "false"
+$env:REQUIRED_PUBLICATION_STATE = "draft"
+try {
+    dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
+}
+finally {
+    Remove-Item Env:PREVIEW_ONLY, Env:REQUIRED_PUBLICATION_STATE -ErrorAction SilentlyContinue
+}
+
+$env:PREVIEW_ONLY = "false"
+$env:REQUIRED_DOCUMENT_TYPE = "note"
+try {
+    dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
+}
+finally {
+    Remove-Item Env:PREVIEW_ONLY, Env:REQUIRED_DOCUMENT_TYPE -ErrorAction SilentlyContinue
+}
+
+$env:PREVIEW_ONLY = "false"
+$env:REQUIRED_DOCUMENT_ID = "worker-shutdown-draft"
+try {
+    dotnet run --project samples/05-payload-modeling-and-metadata/ollama/Sample.csproj
+}
+finally {
+    Remove-Item Env:PREVIEW_ONLY, Env:REQUIRED_DOCUMENT_ID -ErrorAction SilentlyContinue
+}
 ```
 
 `REQUIRED_DOCUMENT_TYPE` defaults to `runbook`, `REQUIRED_PUBLICATION_STATE` to `published`, and `REQUIRED_DOCUMENT_ID` is optional. The cases return the draft runbook, the published note, and no results respectively. Required conditions are never relaxed automatically. Azure supports the same variables.

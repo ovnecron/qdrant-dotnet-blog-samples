@@ -8,7 +8,9 @@ Learn to index and read back documents with a complete, independent console prog
 
 Start Qdrant with `docker compose up -d`. See the [root setup](../../README.md) for prerequisites and provider configuration.
 
-```bash
+The following commands work in PowerShell and Bash/Zsh.
+
+```shell
 dotnet run --project samples/02-indexing-documents/azure-openai/Sample.csproj
 dotnet run --project samples/02-indexing-documents/ollama/Sample.csproj
 ```

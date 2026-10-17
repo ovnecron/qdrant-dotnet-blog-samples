@@ -8,7 +8,9 @@ Learn to query with a document allowlist with a complete, independent console pr
 
 Start Qdrant with `docker compose up -d`. See the [root setup](../../README.md) for prerequisites and provider configuration.
 
-```bash
+The following commands work in PowerShell and Bash/Zsh.
+
+```shell
 dotnet run --project samples/03-querying/azure-openai/Sample.csproj
 dotnet run --project samples/03-querying/ollama/Sample.csproj
 ```
