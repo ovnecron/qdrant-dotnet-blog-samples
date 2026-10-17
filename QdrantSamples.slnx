@@ -29,4 +29,10 @@
   <Folder Name="/05-payload-modeling-and-metadata/ollama/">
     <Project Path="samples/05-payload-modeling-and-metadata/ollama/Sample.csproj" />
   </Folder>
+  <Folder Name="/06-context-assembly/azure-openai/">
+    <Project Path="samples/06-context-assembly/azure-openai/Sample.csproj" />
+  </Folder>
+  <Folder Name="/06-context-assembly/ollama/">
+    <Project Path="samples/06-context-assembly/ollama/Sample.csproj" />
+  </Folder>
 </Solution>
